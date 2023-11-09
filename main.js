@@ -738,7 +738,7 @@ async function main() {
         // "nike.splat",
         // location.href,
         params.get("url") || "undefined.splat",
-        "C:\Users\linep\Downloads\Compressed\splat-main\splat-main",
+        "https://piyawatspeed.github.io/bkwmap/",
     );
     const req = await fetch(url, {
         mode: "cors", // no-cors, *cors, same-origin
