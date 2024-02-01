@@ -1,71 +1,210 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title></title>
 	<style>
 		body {
 			margin: 0;
 			padding: 0;
 			overflow: hidden;
+			position: absolute;
+			width: 100%;
+			height: 100%;
+
+			color: #2d2d2d;
+			background-color: #111111;
+
+			/* sans-serif */
+			font-family: -apple-system, BlinkMacSystemFont, "Open Sans", "Helvetica Neue", sans-serif;
+		}
+
+		#react-root {
+			width: 100%;
+			height: 100%;
+
+			display: flex;
+			flex-direction: row;
+			gap: 2px;
+		}
+
+
+		.demo-menu {
+			background: white;
+
+			border-radius: 10px;
+
+			padding: 60px;
+			width: 100%;
+
+			font-size: 1.1em;
+
+			/* subtle shadow */
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+			overflow: auto;
+
+			/* smooth scroll */
+			scroll-behavior: smooth;
+		}
+
+		.demo-menu pre>pre {
+			border-radius: 10px !important;
+			padding: 1.5em !important;
+		}
+
+		.demo-menu h1 {
+			text-align: center;
+			font-size: 2.5em;
+			margin: 0 0 1.2em 0;
+		}
+
+		.demo-menu h2 {
+			padding-left: 20px;
+			padding-right: 20px;
+			margin-left: -20px;
+			margin-right: -20px;
+
+			display: flex;
+			justify-content: space-between;
+			margin-top: 2.5em;
+			cursor: pointer;
+			border-radius: 10px;
+			padding-top: 10px;
+			padding-bottom: 10px;
+
+			font-size: 1.8em;
+
+			transition: all 0.05s ease-in-out;
+		}
+
+		.demo-menu h2:hover {
+			background-color: #f1f1f1;
+		}
+
+		.demo-menu h2.active {
+			/* background */
+			background: #3f8fcc;
+		}
+
+		.demo-menu h2.active a {
+			/* color */
+			color: white;
+		}
+
+		.demo-menu img {
+			max-width: 100%;
+		}
+
+		button {
+			cursor: pointer;
+			border: none;
+			border-radius: 5px;
+			padding: 10px;
+			background-color: #3f8fcc;
+			color: white;
+			transition: all 0.05s ease-in-out;
+			opacity: 1;
+		}
+
+		a {
+			color: #007cc1;
+			text-decoration: none;
+			cursor: pointer;
+		}
+
+		a:hover {
+			color: #089eef;
+		}
+
+		/* For small screen widths change flex-direction to column */
+		@media (max-width: 768px) {
+			#react-root {
+				flex-direction: column;
+			}
+
+			.demo-menu {
+				width: auto;
+				height: 100%;
+				padding: 25px;
+			}
+		}
+
+		.expand-button {
+			position: absolute;
+			top: 20px;
+			left: 20px;
+			width: 30px;
+			height: 30px;
+			text-align: center;
+			border-radius: 5px;
+			overflow: hidden;
+
+			display: flex;
+			align-content: center;
+			justify-content: center;
+			align-items: center;
+
+			color: white;
+			border: 1px solid rgba(255, 255, 255, 0.5);
+			cursor: pointer;
+			user-select: none;
+
+			text-shadow: 0 1px 1px #0000005c;
+			box-shadow: 0 1px 2px #0000005c;
+
+			font-size: 18px;
+
+			/* this is critical to workaround a Firefox performance bug: https://bugzilla.mozilla.org/show_bug.cgi?id=1867791 */
+			backdrop-filter: blur(10px);
+		}
+	</style>
+	<style>
+		@font-face {
+			font-family: 'icons';
+			src:
+				url('assets/fonts/icons.ttf?38h6mp') format('truetype'),
+				url('assets/fonts/icons.woff?38h6mp') format('woff'),
+				url('assets/fonts/icons.svg?38h6mp#icons') format('svg');
+			font-weight: normal;
+			font-style: normal;
+			font-display: block;
+		}
+
+		[class^="icon-"],
+		[class*=" icon-"] {
+			/* use !important to prevent issues with browser extensions that change fonts */
+			font-family: 'icons' !important;
+			speak: never;
+			font-style: normal;
+			font-weight: normal;
+			font-variant: normal;
+			text-transform: none;
+			line-height: 1;
+
+			/* Better Font Rendering =========== */
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+		}
+
+		.icon-compress:before {
+			content: "\f066";
+		}
+		.icon-navicon:before {
+			content: "\f0c9";
+		}
+		.icon-expand:before {
+			content: "\e900";
 		}
 	</style>
 </head>
+
 <body>
-	<script type="importmap">
-	{
-		"imports": {
-			"three": "https://unpkg.com/three@0.157.0/build/three.module.js",
-			"three/addons/": "https://unpkg.com/three@0.157.0/examples/jsm/",
-			"@lumaai/luma-web": "https://unpkg.com/@lumaai/luma-web@0.1.17/dist/library/luma-web.module.js"
-		}
-	}
-	</script>
-	<script type="module">
-		import { WebGLRenderer, PerspectiveCamera, Scene, Mesh, BoxGeometry, MeshNormalMaterial } from 'three';
-		// orbit controls
-		import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-
-		import { LumaSplatsThree } from '@lumaai/luma-web';
-
-		let renderer = new WebGLRenderer({ antialias: false });
-
-		renderer.domElement.style.position = 'absolute';
-		renderer.domElement.style.width = '100%';
-		renderer.domElement.style.height = '100%';
-
-		// add canvas to DOM
-		document.body.appendChild(renderer.domElement);
-
-		let camera = new PerspectiveCamera(75, 1, 0.1, 1000);
-		camera.position.z = 2;
-		camera.position.y = 2;
-
-		let controls = new OrbitControls(camera, renderer.domElement);
-
-		let scene = new Scene();
-
-		let splat = new LumaSplatsThree({
-			source: 'https://lumalabs.ai/capture/ca1f7170-62ec-4f18-b495-1901d217a1ee'
-		});
-		scene.add(splat);
-
-		function frameLoop() {
-			let canvas = renderer.domElement;
-			let width = canvas.clientWidth;
-			let height = canvas.clientHeight;
-
-			if (canvas.width !== width || canvas.height !== height) {
-				camera.aspect = width / height;
-				camera.updateProjectionMatrix();
-				renderer.setSize(width, height, false);
-			}
-
-			controls.update();
-
-			renderer.render(scene, camera);
-		}
-
-		renderer.setAnimationLoop(frameLoop);
-	</script>
+	<div id="react-root"></div>
+	<script src="dist/index.js"></script>
 </body>
+
 </html>
